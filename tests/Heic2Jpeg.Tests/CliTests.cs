@@ -24,6 +24,15 @@ public sealed class CliTests : IDisposable
     }
 
     [Fact]
+    public async Task Shows_version()
+    {
+        var result = await AppRunner.RunAsync("--version");
+
+        result.ExitCode.Should().Be(0, "app output: {0}", result.Output);
+        result.StdOut.Trim().Should().MatchRegex(@"^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$");
+    }
+
+    [Fact]
     public async Task Fails_when_the_source_folder_does_not_exist()
     {
         var missing = _source.File("does-not-exist");
