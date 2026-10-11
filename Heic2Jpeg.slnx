@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Heic2Jpeg/Heic2Jpeg.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Heic2Jpeg.Tests/Heic2Jpeg.Tests.csproj" />
+  </Folder>
+</Solution>
