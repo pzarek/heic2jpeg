@@ -95,6 +95,11 @@ Push a tag of the form `vX.Y.Z` and GitHub Actions will run the tests, attach
 self-contained binaries for all five platforms to a GitHub Release, and push the
 tool package to NuGet.
 
+NuGet publishing uses [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing),
+so no API key is stored. It needs two things: a trusted publishing policy on
+nuget.org for this repository and the `release.yml` workflow, and a `NUGET_USER`
+repository secret holding the nuget.org profile name of the policy owner.
+
 ## License
 
 [MIT](LICENSE). Built with [Magick.NET](https://github.com/dlemstra/Magick.NET)
