@@ -51,7 +51,8 @@ jobs:
           Invoke-RestMethod https://get.scoop.sh -OutFile install-scoop.ps1
           ./install-scoop.ps1 -RunAsAdmin
           $env:PATH = "$HOME\scoop\shims;$env:PATH"
-          scoop bucket add heic2jpeg $env:GITHUB_WORKSPACE
+          # Scoop only accepts URLs, not plain Windows paths.
+          scoop bucket add heic2jpeg ('file:///' + ($env:GITHUB_WORKSPACE -replace '\\', '/'))
           scoop install heic2jpeg/heic2jpeg
           heic2jpeg --version
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
