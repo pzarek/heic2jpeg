@@ -68,6 +68,60 @@ jobs:
             --generate-notes \
             "${prerelease[@]}"
 
+  manifests:
+    name: Scoop and Homebrew
+    needs: binaries
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the updated manifests to master
+      actions: write # start the packaging workflow on the new commit
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: master
+
+      - name: Update manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          gh release download "$GITHUB_REF_NAME" -p SHA256SUMS.txt -D "$RUNNER_TEMP"
+          .github/scripts/update-manifests.sh "$VERSION" "$RUNNER_TEMP/SHA256SUMS.txt"
+          git add bucket Formula
+          if git diff --cached --quiet; then
+            echo "Manifests already point at $VERSION"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Update Scoop and Homebrew manifests to $VERSION"
+          git push
+          # Pushes made with GITHUB_TOKEN don't trigger workflows, so start the install check explicitly.
+          gh workflow run packaging.yml --ref master
+
+  winget:
+    name: WinGet
+    needs: binaries
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+    steps:
+      # Opens a PR against microsoft/winget-pkgs from a fork under the repo owner's account.
+      # WINGET_TOKEN is a classic PAT with public_repo scope. The first version must already be
+      # in winget-pkgs (submitted by hand), so this step is skipped until the secret exists.
+      - name: Submit to winget-pkgs
+        if: env.WINGET_TOKEN != ''
+        uses: vedantmgoyal9/winget-releaser@main
+        with:
+          identifier: pzarek.heic2jpeg
+          installers-regex: '-win-(x64|arm64)\.zip$'
+          token: ${{ env.WINGET_TOKEN }}
+
   nuget:
     name: NuGet
     needs: test
