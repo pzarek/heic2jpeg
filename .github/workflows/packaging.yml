@@ -1,0 +1,57 @@
+name: Packaging
+
+# Installs the release that bucket/ and Formula/ point at, using this repo as the
+# Scoop bucket and Homebrew tap. The release workflow starts it after updating them.
+
+on:
+  push:
+    branches: [master]
+    paths: ['bucket/**', 'Formula/**', '.github/workflows/packaging.yml']
+  pull_request:
+    paths: ['bucket/**', 'Formula/**', '.github/workflows/packaging.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  homebrew:
+    name: Homebrew (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install and test
+        run: |
+          set -euo pipefail
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          fi
+          brew tap pzarek/heic2jpeg "$GITHUB_WORKSPACE"
+          brew install pzarek/heic2jpeg/heic2jpeg
+          brew test pzarek/heic2jpeg/heic2jpeg
+          heic2jpeg --version
+
+  scoop:
+    name: Scoop
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install and test
+        shell: pwsh
+        run: |
+          Invoke-RestMethod https://get.scoop.sh -OutFile install-scoop.ps1
+          ./install-scoop.ps1 -RunAsAdmin
+          $env:PATH = "$HOME\scoop\shims;$env:PATH"
+          scoop bucket add heic2jpeg $env:GITHUB_WORKSPACE
+          scoop install heic2jpeg/heic2jpeg
+          heic2jpeg --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

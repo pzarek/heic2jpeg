@@ -15,7 +15,25 @@ heic2jpeg <SOURCE> <DESTINATION> [--quality 90]
 
 ## Install
 
-### Option 1: download a binary (no .NET needed)
+### Package managers
+
+Scoop (Windows x64, ARM64) and Homebrew (macOS Apple Silicon, Linux x64, ARM64)
+install from this repository, so add it as a bucket or tap first:
+
+```
+scoop bucket add heic2jpeg https://github.com/pzarek/heic2jpeg
+scoop install heic2jpeg/heic2jpeg
+```
+
+```
+brew tap pzarek/heic2jpeg https://github.com/pzarek/heic2jpeg
+brew install pzarek/heic2jpeg/heic2jpeg
+```
+
+Upgrade later with `scoop update heic2jpeg` or `brew upgrade heic2jpeg`. Neither
+needs .NET installed, and Homebrew skips the macOS quarantine prompt described below.
+
+### Download a binary (no .NET needed)
 
 Grab the file for your platform from the
 [latest release](https://github.com/pzarek/heic2jpeg/releases/latest), unpack it,
@@ -40,7 +58,7 @@ allow it with:
 xattr -d com.apple.quarantine ./heic2jpeg
 ```
 
-### Option 2: .NET tool (requires the .NET 10 SDK)
+### .NET tool (requires the .NET 10 SDK)
 
 ```
 dotnet tool install -g heic2jpeg
@@ -92,8 +110,22 @@ The end-to-end tests run the real executable against a sample HEIC file.
 ## Release
 
 Push a tag of the form `vX.Y.Z` and GitHub Actions will run the tests, attach
-self-contained binaries for all five platforms to a GitHub Release, and push the
-tool package to NuGet.
+self-contained binaries for all five platforms to a GitHub Release, push the
+tool package to NuGet, and update the package managers:
+
+- **Scoop and Homebrew:** the workflow rewrites `bucket/heic2jpeg.json` and
+  `Formula/heic2jpeg.rb` with the new version and checksums, commits them to
+  `master` (pull afterwards), and starts the `Packaging` workflow, which installs
+  the release through both on Windows, macOS and Linux.
+- **winget:** the workflow opens a pull request against
+  [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) with
+  [WinGet Releaser](https://github.com/vedantmgoyal9/winget-releaser). It needs a
+  `WINGET_TOKEN` repository secret (a classic personal access token with the
+  `public_repo` scope) and a fork of winget-pkgs under the `pzarek` account. The
+  step is skipped while the secret is missing. Microsoft reviews each pull request,
+  so a new version can take a few days to show up in winget.
+
+Pre-release tags (`v1.2.3-rc.1`) skip all three.
 
 NuGet publishing uses [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing),
 so no API key is stored. It needs two things: a trusted publishing policy on

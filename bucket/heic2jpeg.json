@@ -1,0 +1,17 @@
+{
+    "version": "0.1.0",
+    "description": "Converts a folder of HEIC/HEIF photos to JPEG in parallel, with progress bars.",
+    "homepage": "https://github.com/pzarek/heic2jpeg",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/pzarek/heic2jpeg/releases/download/v0.1.0/heic2jpeg-0.1.0-win-x64.zip",
+            "hash": "547e541511087b8b1514b927f33edbf569e41d2bc459cc6b41c9326d13f488a4"
+        },
+        "arm64": {
+            "url": "https://github.com/pzarek/heic2jpeg/releases/download/v0.1.0/heic2jpeg-0.1.0-win-arm64.zip",
+            "hash": "ceaf08569dfefb435106740e33d3b5560e24e265e76d5ac21b99c923b58dd7bd"
+        }
+    },
+    "bin": "heic2jpeg.exe"
+}
