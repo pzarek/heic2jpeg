@@ -1,6 +1,5 @@
 # heic2jpeg
 
-[![CI](https://github.com/pzarek/heic2jpeg/actions/workflows/ci.yml/badge.svg)](https://github.com/pzarek/heic2jpeg/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/heic2jpeg)](https://www.nuget.org/packages/heic2jpeg)
 
 **This app is 100% vibe-coded. If you don't like something, blame the robots!**
@@ -51,8 +50,7 @@ and run it from a terminal.
 | Linux ARM64 | `heic2jpeg-<version>-linux-arm64.tar.gz` |
 | macOS Apple Silicon | `heic2jpeg-<version>-osx-arm64.tar.gz` |
 
-Intel Macs are not supported because the bundled ImageMagick library ships no
-`osx-x64` build.
+Intel Macs are not supported.
 
 The binaries are not code-signed. Windows SmartScreen may warn on first run
 (choose "More info" then "Run anyway"). macOS quarantines downloaded executables;
@@ -112,9 +110,8 @@ OPTIONS:
 - **ZIP destination:** a path ending in `.zip` is written as a ZIP file (unless a
   folder with that name already exists). If the ZIP file exists, its other entries are
   kept and entries with the same name are replaced. The destination can even be the
-  source ZIP file, to add the JPEGs next to the photos. The new ZIP file is built
-  next to the old one and only swapped in at the end, so a failed or cancelled run
-  leaves it untouched.
+  source ZIP file, to add the JPEGs next to the photos. A failed or cancelled run
+  leaves an existing ZIP file untouched.
 - Files that fail to decode are listed at the end and the exit code is 1.
   Everything else is still converted.
 - Ctrl+C stops after the photos being converted finish (exit code 130). A ZIP
@@ -163,7 +160,7 @@ A folder with .heic/.heif photos, or a .zip file that contains them.
 
 After converting, the summary stays on screen and you can go back to the menu. When
 the output is not a terminal (piped or redirected), running without arguments prints
-the usage text as before.
+the usage text instead.
 
 ## Language
 
@@ -177,49 +174,6 @@ language gets English.
 Error messages that come from the system (such as "Access denied") or from the
 command-line parser (such as "Missing required argument") stay in English.
 
-The texts are in `src/Heic2Jpeg/Strings.resx` (English) and `Strings.pl.resx`
-(Polish); the comments in `Strings.resx` say where each one is shown. A test fails if a
-text is missing from either file or the two do not use the same `{0}` placeholders.
-
-## Build and test
-
-Requires the [.NET 10 SDK](https://dotnet.microsoft.com/download).
-
-```
-dotnet build
-dotnet test
-```
-
-The end-to-end tests run the real executable against a sample HEIC file. The menu
-and folder browser are tested in-process with Spectre.Console's test console and
-scripted key presses.
-
-## Release
-
-Push a tag of the form `vX.Y.Z` and GitHub Actions will run the tests, attach
-self-contained binaries for all five platforms to a GitHub Release, push the
-tool package to NuGet, and update the package managers:
-
-- **Scoop and Homebrew:** the workflow rewrites `bucket/heic2jpeg.json` and
-  `Formula/heic2jpeg.rb` with the new version and checksums, commits them to
-  `master` (pull afterwards), and starts the `Packaging` workflow, which installs
-  the release through both on Windows, macOS and Linux.
-- **winget:** the workflow opens a pull request against
-  [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) with
-  [WinGet Releaser](https://github.com/vedantmgoyal9/winget-releaser). It needs a
-  `WINGET_TOKEN` repository secret (a classic personal access token with the
-  `public_repo` scope) and a fork of winget-pkgs under the `pzarek` account. The
-  step is skipped while the secret is missing. Microsoft reviews each pull request,
-  so a new version can take a few days to show up in winget.
-
-Pre-release tags (`v1.2.3-rc.1`) skip all three.
-
-NuGet publishing uses [Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing),
-so no API key is stored. It needs two things: a trusted publishing policy on
-nuget.org for this repository and the `release.yml` workflow, and a `NUGET_USER`
-repository secret holding the nuget.org profile name of the policy owner.
-
 ## License
 
-[MIT](LICENSE). Built with [Magick.NET](https://github.com/dlemstra/Magick.NET)
-and [Spectre.Console](https://spectreconsole.net/).
+[MIT](LICENSE)
