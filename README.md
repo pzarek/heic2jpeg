@@ -5,13 +5,17 @@
 
 **This app is 100% vibe-coded. If you don't like something, blame the robots!**
 
-Converts a folder of HEIC/HEIF photos (the format iPhones shoot in) to JPEG.
+Converts HEIC/HEIF photos (the format iPhones shoot in) to JPEG. The photos can
+come from a folder or a ZIP file, and the JPEGs can go to a folder or a ZIP file.
 Files are converted in parallel with progress bars, orientation is baked in,
 and EXIF metadata and color profiles are preserved.
 
 ```
 heic2jpeg <SOURCE> <DESTINATION> [--quality 90]
 ```
+
+Run `heic2jpeg` without arguments to choose the source and destination from a menu
+instead (see [Interactive menu](#interactive-menu)).
 
 ## Install
 
@@ -73,28 +77,93 @@ dnx heic2jpeg ~/Pictures/heic ~/Pictures/jpeg
 ## Usage
 
 ```
+DESCRIPTION:
+Converts HEIC/HEIF photos to JPEG. Run it without arguments to choose the
+folders from a menu
+
 USAGE:
     heic2jpeg <SOURCE> <DESTINATION> [OPTIONS]
 
 EXAMPLES:
     heic2jpeg ~/Pictures/heic ~/Pictures/jpeg
     heic2jpeg ~/Pictures/heic ~/Pictures/jpeg --quality 85
+    heic2jpeg ~/Downloads/iCloud.zip ~/Pictures/jpeg
+    heic2jpeg ~/Pictures/heic ~/Pictures/jpeg.zip
 
 ARGUMENTS:
-    <SOURCE>         Folder containing .heic/.heif files
-    <DESTINATION>    Folder to write .jpg files to. Created if it does not exist
+    <SOURCE>         Folder or .zip file containing .heic/.heif files
+    <DESTINATION>    Folder or .zip file to write .jpg files to. Created if it
+                     does not exist
 
 OPTIONS:
                                DEFAULT
     -h, --help                            Prints help information
+    -v, --version                         Prints version information
     -q, --quality <QUALITY>    90         JPEG quality, 1-100
 ```
 
-- Every `.heic` and `.heif` file in the source folder (not subfolders) is converted
-  to `<same name>.jpg` in the destination folder. Existing files are overwritten.
+- **Folder source:** every `.heic` and `.heif` file directly in the folder (not in
+  subfolders) is converted to `<same name>.jpg`.
+- **ZIP source:** every `.heic` and `.heif` file anywhere in the archive is converted,
+  and the archive's folders are kept, so `Album/IMG_0001.HEIC` becomes
+  `Album/IMG_0001.jpg`. The `__MACOSX` folder and `._*` files that macOS adds to ZIP
+  files are skipped. Nothing is unpacked to disk.
+- **Folder destination:** existing files with the same name are overwritten.
+- **ZIP destination:** a path ending in `.zip` is written as a ZIP file (unless a
+  folder with that name already exists). If the ZIP file exists, its other entries are
+  kept and entries with the same name are replaced. The destination can even be the
+  source ZIP file, to add the JPEGs next to the photos. The new ZIP file is built
+  next to the old one and only swapped in at the end, so a failed or cancelled run
+  leaves it untouched.
 - Files that fail to decode are listed at the end and the exit code is 1.
   Everything else is still converted.
+- Ctrl+C stops after the photos being converted finish (exit code 130). A ZIP
+  destination is left as it was.
 - JPEG quality 90 is a good default for photos. Lower it for smaller files.
+
+## Interactive menu
+
+Started without arguments in a terminal (or by double-clicking `heic2jpeg.exe` on
+Windows), heic2jpeg shows a menu instead of the usage text:
+
+```
+── heic2jpeg ────────────────────────────────────────────────────────────
+Converts HEIC/HEIF photos to JPEG. Run heic2jpeg --help for the command-line options.
+
+  Source        ~/Downloads/iCloud Photos.zip (ZIP file, 312 HEIC files)
+  Destination   ~/Downloads/iCloud Photos-jpeg (new folder)
+  JPEG quality  90
+> Convert
+  Exit
+```
+
+Choosing **Source** or **Destination** opens a folder browser that lists folders and
+`.zip` files. Use the arrow keys (also PageUp/PageDown and Home/End) and Enter; Esc
+goes back.
+
+```
+── Choose the source ────────────────────────────────────────────────────
+A folder with .heic/.heif photos, or a .zip file that contains them.
+~/Downloads
+
+> [Use this folder] (0 HEIC files)
+  ..
+  Holiday 2025/
+  iCloud Photos.zip  (1.2 GB)
+  [Type a path]
+  [Back]
+```
+
+- **Source:** enter a folder and pick `[Use this folder]`, or pick a `.zip` file.
+- **Destination:** pick a folder or an existing `.zip` file, or create a
+  `[New folder]` or `[New ZIP file]` (nothing is created until you convert). The
+  browser starts next to the source and suggests a name such as `heic-jpeg`.
+- `[Type a path]` jumps anywhere, including `~` and paths pasted with quotes.
+- On Windows, `..` from the root of a drive lists the drives.
+
+After converting, the summary stays on screen and you can go back to the menu. When
+the output is not a terminal (piped or redirected), running without arguments prints
+the usage text as before.
 
 ## Build and test
 
@@ -105,7 +174,9 @@ dotnet build
 dotnet test
 ```
 
-The end-to-end tests run the real executable against a sample HEIC file.
+The end-to-end tests run the real executable against a sample HEIC file. The menu
+and folder browser are tested in-process with Spectre.Console's test console and
+scripted key presses.
 
 ## Release
 
