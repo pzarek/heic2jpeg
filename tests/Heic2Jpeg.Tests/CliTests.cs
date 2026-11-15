@@ -33,6 +33,17 @@ public sealed class CliTests : IDisposable
     }
 
     [Fact]
+    public async Task Prints_usage_instead_of_the_menu_when_not_run_in_a_terminal()
+    {
+        // AppRunner redirects the output, so there is no terminal to draw the menu in.
+        var result = await AppRunner.RunAsync();
+
+        result.ExitCode.Should().NotBe(0);
+        result.StdOut.Should().Contain("USAGE");
+        result.StdOut.Should().Contain("without arguments");
+    }
+
+    [Fact]
     public async Task Fails_when_the_source_folder_does_not_exist()
     {
         var missing = _source.File("does-not-exist");

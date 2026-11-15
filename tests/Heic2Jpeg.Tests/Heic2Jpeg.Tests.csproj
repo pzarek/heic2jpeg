@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
+    <PackageReference Include="Spectre.Console.Testing" Version="0.57.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     <PackageReference Include="xunit.v3" Version="4.0.2" />
   </ItemGroup>
@@ -19,6 +20,7 @@
     <Using Include="Xunit" />
     <Using Include="AwesomeAssertions" />
     <Using Include="ImageMagick" />
+    <Using Include="System.IO.Compression" />
   </ItemGroup>
 
   <ItemGroup>

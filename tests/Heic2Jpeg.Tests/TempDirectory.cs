@@ -20,6 +20,22 @@ public sealed class TempDirectory : IDisposable
             ? Directory.GetFiles(FullPath, pattern).Select(path => Path.GetFileName(path)).Order().ToArray()
             : [];
 
+    /// <summary>Every file below the folder, as '/'-separated relative paths.</summary>
+    public string[] AllFiles() =>
+        Directory.Exists(FullPath)
+            ? Directory.GetFiles(FullPath, "*", SearchOption.AllDirectories)
+                .Select(path => Path.GetRelativePath(FullPath, path).Replace('\\', '/'))
+                .Order(StringComparer.Ordinal)
+                .ToArray()
+            : [];
+
+    public string Folder(string name)
+    {
+        var path = Path.Combine(FullPath, name);
+        Directory.CreateDirectory(path);
+        return path;
+    }
+
     public void Dispose()
     {
         try

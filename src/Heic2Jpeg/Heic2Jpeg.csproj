@@ -18,7 +18,7 @@
     <ToolCommandName>heic2jpeg</ToolCommandName>
     <PackageId>heic2jpeg</PackageId>
     <Authors>Piotr Zarek</Authors>
-    <Description>Converts a folder of HEIC/HEIF photos to JPEG in parallel, with progress bars.</Description>
+    <Description>Converts HEIC/HEIF photos from a folder or ZIP file to JPEG in parallel, with progress bars and an interactive folder browser.</Description>
     <PackageTags>heic;heif;jpeg;jpg;convert;converter;images;photos;iphone;cli;tool</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/pzarek/heic2jpeg</PackageProjectUrl>
