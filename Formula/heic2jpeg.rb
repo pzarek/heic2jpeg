@@ -2,26 +2,26 @@
 class Heic2jpeg < Formula
   desc "Convert a folder of HEIC/HEIF photos to JPEG in parallel"
   homepage "https://github.com/pzarek/heic2jpeg"
-  version "0.1.0"
+  version "0.2.0"
   license "MIT"
 
   on_macos do
     # The bundled ImageMagick library ships no Intel Mac build.
     depends_on arch: :arm64
 
-    url "https://github.com/pzarek/heic2jpeg/releases/download/v0.1.0/heic2jpeg-0.1.0-osx-arm64.tar.gz"
-    sha256 "f9f0ff0f7d62227f7b3eb0e4b1bc8c3b6dfb59872f37f5a73a7629d152a2b321"
+    url "https://github.com/pzarek/heic2jpeg/releases/download/v0.2.0/heic2jpeg-0.2.0-osx-arm64.tar.gz"
+    sha256 "fb1a6931f49ffc7185fa664e15197414ef9c15d31e07c8af7e9dec000e96248d"
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/pzarek/heic2jpeg/releases/download/v0.1.0/heic2jpeg-0.1.0-linux-x64.tar.gz"
-      sha256 "0ef20a770be0d852525aeb7aa50c972c4323a98b155a046bdbcd63b4ba7ecb08"
+      url "https://github.com/pzarek/heic2jpeg/releases/download/v0.2.0/heic2jpeg-0.2.0-linux-x64.tar.gz"
+      sha256 "50b0da36b8d576dd230dd471e635e03ff116f2e8ccc6abc2842c548d3dbd2668"
     end
 
     on_arm do
-      url "https://github.com/pzarek/heic2jpeg/releases/download/v0.1.0/heic2jpeg-0.1.0-linux-arm64.tar.gz"
-      sha256 "bbbaee8bb7662da97acd3842b3d931338304fff152c760688b14dc0194830dd8"
+      url "https://github.com/pzarek/heic2jpeg/releases/download/v0.2.0/heic2jpeg-0.2.0-linux-arm64.tar.gz"
+      sha256 "8be5cbf4e4c27f2c87dcafa77c2f5aec4fd8c704d2df68589f2422d9e028e748"
     end
   end
 
