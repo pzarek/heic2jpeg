@@ -1,7 +1,8 @@
 name: Packaging
 
 # Installs the release that bucket/ and Formula/ point at, using this repo as the
-# Scoop bucket and Homebrew tap. The release workflow starts it after updating them.
+# Scoop bucket and Homebrew tap. The release workflow starts it on the pull request
+# that updates them.
 
 on:
   push:

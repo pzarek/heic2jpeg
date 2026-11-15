@@ -35,9 +35,12 @@ self-contained binaries for all five platforms to a GitHub Release, push the
 tool package to NuGet, and update the package managers:
 
 - **Scoop and Homebrew:** the workflow rewrites `bucket/heic2jpeg.json` and
-  `Formula/heic2jpeg.rb` with the new version and checksums, commits them to
-  `master` (pull afterwards), and starts the `Packaging` workflow, which installs
-  the release through both on Windows, macOS and Linux.
+  `Formula/heic2jpeg.rb` with the new version and checksums and opens a pull
+  request with them. It starts CI and the `Packaging` workflow (which installs the
+  release through both on Windows, macOS and Linux) on that pull request, which
+  merges itself into `master` once CI passes (pull afterwards). Opening the pull
+  request needs "Allow GitHub Actions to create and approve pull requests" turned on
+  under Settings → Actions → General.
 - **winget:** the workflow opens a pull request against
   [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs) with
   [WinGet Releaser](https://github.com/vedantmgoyal9/winget-releaser). It needs a

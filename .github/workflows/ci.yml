@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
   pull_request:
+  # The release workflow starts CI by hand on its manifests pull request: pull requests
+  # opened with GITHUB_TOKEN don't trigger workflows, and master requires these checks.
+  workflow_dispatch:
 
 env:
   DOTNET_NOLOGO: true
