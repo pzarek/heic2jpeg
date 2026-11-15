@@ -13,14 +13,14 @@ public sealed class InteractiveTests : IDisposable
 
     public void Dispose() => _root.Dispose();
 
-    private static TestConsole Terminal()
+    internal static TestConsole Terminal()
     {
         var console = new TestConsole().Interactive().Width(120).Height(40);
         console.Profile.Capabilities.Ansi = true;
         return console;
     }
 
-    private static void Press(TestConsole console, params ConsoleKey[] keys)
+    internal static void Press(TestConsole console, params ConsoleKey[] keys)
     {
         foreach (var key in keys)
         {

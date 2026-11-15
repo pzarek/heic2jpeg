@@ -12,6 +12,31 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
 
+  <!--
+    Texts are in Strings.resx (English) and Strings.pl.resx (Polish). .NET picks the language from
+    CultureInfo.CurrentUICulture: the Windows display language, or LC_ALL / LC_MESSAGES / LANG on Linux and macOS.
+    Any other language falls back to English.
+  -->
+  <PropertyGroup>
+    <NeutralLanguage>en</NeutralLanguage>
+    <!-- Ship only these languages; drops the unused translations that come with Spectre.Console.Cli. -->
+    <SatelliteResourceLanguages>en;pl</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Generates the Heic2Jpeg.Strings class (one property per text) at build time, into obj/. -->
+    <EmbeddedResource Update="Strings.resx">
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Heic2Jpeg</StronglyTypedNamespace>
+      <StronglyTypedClassName>Strings</StronglyTypedClassName>
+      <StronglyTypedFileName>$(IntermediateOutputPath)Strings.Designer.cs</StronglyTypedFileName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Heic2Jpeg.Tests" />
+  </ItemGroup>
+
   <!-- NuGet package, installable with: dotnet tool install -g heic2jpeg -->
   <PropertyGroup>
     <PackAsTool>true</PackAsTool>

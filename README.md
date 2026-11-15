@@ -165,6 +165,22 @@ After converting, the summary stays on screen and you can go back to the menu. W
 the output is not a terminal (piped or redirected), running without arguments prints
 the usage text as before.
 
+## Language
+
+heic2jpeg speaks English and Polish, and follows the system language. Any other
+language gets English.
+
+- **Windows:** the Windows display language.
+- **Linux and macOS:** the `LC_ALL`, `LC_MESSAGES` or `LANG` environment variable,
+  so a single run can be switched with `LANG=pl_PL.UTF-8 heic2jpeg --help`.
+
+Error messages that come from the system (such as "Access denied") or from the
+command-line parser (such as "Missing required argument") stay in English.
+
+The texts are in `src/Heic2Jpeg/Strings.resx` (English) and `Strings.pl.resx`
+(Polish); the comments in `Strings.resx` say where each one is shown. A test fails if a
+text is missing from either file or the two do not use the same `{0}` placeholders.
+
 ## Build and test
 
 Requires the [.NET 10 SDK](https://dotnet.microsoft.com/download).

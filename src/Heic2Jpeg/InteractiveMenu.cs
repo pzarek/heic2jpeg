@@ -100,7 +100,7 @@ public sealed class InteractiveMenu
     {
         _console.Clear();
         _console.Write(new Rule($"[bold]heic2jpeg[/] [grey]{Markup.Escape(_version)}[/]").LeftJustified());
-        _console.MarkupLine("[grey]Converts HEIC/HEIF photos to JPEG. Run [bold]heic2jpeg --help[/] for the command-line options.[/]");
+        _console.MarkupLine($"[grey]{string.Format(Markup.Escape(Strings.MenuIntro), "[bold]heic2jpeg --help[/]")}[/]");
         _console.WriteLine();
 
         var next = _source is null ? Action.Source : _destination is null ? Action.Destination : Action.Convert;
@@ -115,27 +115,32 @@ public sealed class InteractiveMenu
 
     private string Describe(Action action)
     {
+        // The values line up two spaces after the longest label.
+        var labelWidth = new[] { Strings.MenuSource, Strings.MenuDestination, Strings.JpegQuality }.Max(label => label.Length) + 2;
+        string Label(string text) => Markup.Escape(text.PadRight(labelWidth));
+
         string PathWithDetails(string path, string details)
         {
             var suffix = details.Length > 0 ? $" ({details})" : "";
 
             // Leave room for the "> " cursor and the label column so that no item wraps.
-            var pathWidth = Math.Max(10, _console.Profile.Width - 2 - 14 - suffix.Length - 1);
+            var pathWidth = Math.Max(10, _console.Profile.Width - 2 - labelWidth - suffix.Length - 1);
 
             return Markup.Escape(Display.FitStart(Display.Path(path), pathWidth)) + $"[grey]{Markup.Escape(suffix)}[/]";
         }
 
+        var notChosen = $"[grey]{Markup.Escape(Strings.NotChosen)}[/]";
         return action switch
         {
-            Action.Source => "Source        " + (_source is null
-                ? "[grey]not chosen[/]"
+            Action.Source => Label(Strings.MenuSource) + (_source is null
+                ? notChosen
                 : PathWithDetails(_source, _sourceDetails)),
-            Action.Destination => "Destination   " + (_destination is null
-                ? "[grey]not chosen[/]"
+            Action.Destination => Label(Strings.MenuDestination) + (_destination is null
+                ? notChosen
                 : PathWithDetails(_destination, DescribeDestination(_destination))),
-            Action.Quality => $"JPEG quality  {_quality}",
-            Action.Convert => "[green]Convert[/]",
-            _ => "Exit",
+            Action.Quality => Label(Strings.JpegQuality) + _quality,
+            Action.Convert => $"[green]{Markup.Escape(Strings.MenuConvert)}[/]",
+            _ => Markup.Escape(Strings.Exit),
         };
     }
 
@@ -172,15 +177,17 @@ public sealed class InteractiveMenu
     private async Task ChooseQualityAsync(CancellationToken cancellationToken)
     {
         _console.Clear();
-        _console.Write(new Rule("[bold]JPEG quality[/]").LeftJustified());
-        _console.MarkupLine("[grey]90 is a good default for photos. Lower it for smaller files.[/]");
+        _console.Write(new Rule($"[bold]{Markup.Escape(Strings.JpegQuality)}[/]").LeftJustified());
+        _console.MarkupLine($"[grey]{Markup.Escape(Strings.QualityHint)}[/]");
         _console.WriteLine();
 
-        _quality = await new TextPrompt<int>("JPEG quality, 1-100")
+        var invalid = $"[red]{Markup.Escape(Strings.EnterQuality)}[/]";
+        _quality = await new TextPrompt<int>(Markup.Escape(Strings.QualityPrompt))
             .DefaultValue(_quality)
+            .ValidationErrorMessage(invalid) // Instead of Spectre's English "Invalid input" for text that is not a number.
             .Validate(quality => quality is >= 1 and <= 100
                 ? ValidationResult.Success()
-                : ValidationResult.Error("[red]Enter a number from 1 to 100.[/]"))
+                : ValidationResult.Error(invalid))
             .ShowAsync(_console, cancellationToken);
     }
 
@@ -191,7 +198,7 @@ public sealed class InteractiveMenu
         var error = Locations.ValidateSource(_source!) ?? Locations.ValidateDestination(_destination!);
         if (error is not null)
         {
-            _console.MarkupLineInterpolated($"[red]Error:[/] {error}");
+            _console.MarkupLineInterpolated($"[red]{Strings.ErrorPrefix}[/] {error}");
             return 1;
         }
 
@@ -205,9 +212,10 @@ public sealed class InteractiveMenu
     private async Task<bool> AskBackToMenuAsync(CancellationToken cancellationToken)
     {
         _console.WriteLine();
-        const string back = "Back to the menu";
+        var back = Strings.BackToMenu;
         var choice = await new SelectionPrompt<string>()
-            .AddChoices(back, "Exit")
+            .UseConverter(Markup.Escape)
+            .AddChoices(back, Strings.Exit)
             .AddCancelResult(back)
             .ShowAsync(_console, cancellationToken);
 
@@ -240,11 +248,11 @@ public sealed class InteractiveMenu
         {
             using var photos = PhotoSource.Open(source);
             var count = Display.Photos(photos.Photos.Count);
-            return Directory.Exists(source) ? count : "ZIP file, " + count;
+            return Directory.Exists(source) ? count : string.Format(Strings.ZipFileWithPhotos, count);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
         {
-            return "cannot be read";
+            return Strings.CannotBeRead;
         }
     }
 
@@ -252,9 +260,9 @@ public sealed class InteractiveMenu
     {
         if (Locations.IsZipDestination(destination))
         {
-            return File.Exists(destination) ? "existing ZIP file" : "new ZIP file";
+            return File.Exists(destination) ? Strings.ExistingZipFile : Strings.NewZipFileDetail;
         }
 
-        return Directory.Exists(destination) ? "" : "new folder";
+        return Directory.Exists(destination) ? "" : Strings.NewFolderDetail;
     }
 }

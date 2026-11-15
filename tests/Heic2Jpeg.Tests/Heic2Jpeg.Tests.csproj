@@ -29,6 +29,8 @@
 
   <ItemGroup>
     <None Include="Fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Runs the tests in English on any machine; LocalizationTests switch to Polish where needed. -->
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

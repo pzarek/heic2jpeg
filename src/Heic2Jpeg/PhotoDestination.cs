@@ -26,7 +26,7 @@ internal static class PhotoDestination
         var segments = relativePath.Split('/');
         if (segments.Any(segment => segment is "" or "." or ".."))
         {
-            throw new InvalidDataException($"Refusing to write outside the destination: {relativePath}");
+            throw new InvalidDataException(string.Format(Strings.RefusingToWriteOutside, relativePath));
         }
 
         return segments;
@@ -53,13 +53,13 @@ internal sealed class FolderDestination : IPhotoDestination
         var segments = PhotoDestination.SplitSafely(jpegPath);
         if (segments.Any(segment => segment.IndexOfAny(InvalidNameChars) >= 0))
         {
-            throw new IOException($"Not a valid file name on this system: {jpegPath}");
+            throw new IOException(string.Format(Strings.NotAValidFileName, jpegPath));
         }
 
         var target = Path.GetFullPath(Path.Combine([_root, .. segments]));
         if (!target.StartsWith(_rootPrefix, StringComparison.Ordinal))
         {
-            throw new InvalidDataException($"Refusing to write outside the destination: {jpegPath}");
+            throw new InvalidDataException(string.Format(Strings.RefusingToWriteOutside, jpegPath));
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
@@ -134,7 +134,7 @@ internal sealed class ZipDestination : IPhotoDestination
         {
             if (!_written.Add(jpegPath))
             {
-                throw new IOException($"Another photo was already saved as {jpegPath}");
+                throw new IOException(string.Format(Strings.AlreadySavedAs, jpegPath));
             }
 
             // JPEG data does not deflate, so store it as is.

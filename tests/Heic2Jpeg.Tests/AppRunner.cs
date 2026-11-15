@@ -20,7 +20,16 @@ public static class AppRunner
     private static readonly string DotnetHost =
         Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? "dotnet";
 
-    public static async Task<AppResult> RunAsync(params string[] args)
+    /// <summary>Runs the app in English, whatever the language of this machine.</summary>
+    public static Task<AppResult> RunAsync(params string[] args) => RunCoreAsync(locale: null, args);
+
+    /// <summary>
+    /// Runs the app with the language set the way Linux and macOS users set it, e.g. "pl_PL.UTF-8".
+    /// Windows takes the language from its display language instead, so this has no effect there.
+    /// </summary>
+    public static Task<AppResult> RunWithLocaleAsync(string locale, params string[] args) => RunCoreAsync(locale, args);
+
+    private static async Task<AppResult> RunCoreAsync(string? locale, string[] args)
     {
         var startInfo = new ProcessStartInfo(DotnetHost)
         {
@@ -39,6 +48,18 @@ public static class AppRunner
         // Keep output plain so assertions do not have to deal with ANSI escape codes.
         startInfo.Environment["NO_COLOR"] = "1";
         startInfo.Environment["TERM"] = "dumb";
+
+        if (locale is null)
+        {
+            // The invariant culture gets the English texts on every OS, including a Windows set to Polish.
+            startInfo.Environment["DOTNET_SYSTEM_GLOBALIZATION_INVARIANT"] = "1";
+        }
+        else
+        {
+            startInfo.Environment.Remove("DOTNET_SYSTEM_GLOBALIZATION_INVARIANT");
+            startInfo.Environment["LC_ALL"] = locale;
+            startInfo.Environment["LANG"] = locale;
+        }
 
         using var process = Process.Start(startInfo)
             ?? throw new InvalidOperationException("Failed to start heic2jpeg.");

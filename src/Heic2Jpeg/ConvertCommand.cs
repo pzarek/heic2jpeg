@@ -7,15 +7,15 @@ namespace Heic2Jpeg;
 public sealed class ConvertSettings : CommandSettings
 {
     [CommandArgument(0, "<SOURCE>")]
-    [Description("Folder or .zip file containing .heic/.heif files.")]
+    [LocalizedDescription(nameof(Strings.SourceArgumentDescription))]
     public string Source { get; init; } = string.Empty;
 
     [CommandArgument(1, "<DESTINATION>")]
-    [Description("Folder or .zip file to write .jpg files to. Created if it does not exist.")]
+    [LocalizedDescription(nameof(Strings.DestinationArgumentDescription))]
     public string Destination { get; init; } = string.Empty;
 
     [CommandOption("-q|--quality <QUALITY>")]
-    [Description("JPEG quality, 1-100.")]
+    [LocalizedDescription(nameof(Strings.QualityOptionDescription))]
     [DefaultValue(90)]
     public int Quality { get; init; }
 
@@ -29,7 +29,7 @@ public sealed class ConvertSettings : CommandSettings
 
         if (Quality is < 1 or > 100)
         {
-            return ValidationResult.Error("Quality must be between 1 and 100.");
+            return ValidationResult.Error(Strings.QualityOutOfRange);
         }
 
         return ValidationResult.Success();

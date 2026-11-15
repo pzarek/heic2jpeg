@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Polish texts. Every name in Strings.resx must also be here (LocalizationTests checks it).
+    The comments in Strings.resx say where each text is shown.
+    Texts are plain text, never Spectre.Console markup: the code escapes them and adds the colours.
+    {0}, {1} are filled in with string.Format.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Konwertuje zdjęcia HEIC/HEIF do formatu JPEG. Uruchom bez argumentów, aby wybrać foldery z menu.</value>
+  </data>
+  <data name="SourceArgumentDescription" xml:space="preserve">
+    <value>Folder lub plik .zip z plikami .heic/.heif.</value>
+  </data>
+  <data name="DestinationArgumentDescription" xml:space="preserve">
+    <value>Folder lub plik .zip, do którego trafią pliki .jpg. Zostanie utworzony, jeśli nie istnieje.</value>
+  </data>
+  <data name="QualityOptionDescription" xml:space="preserve">
+    <value>Jakość JPEG, 1-100.</value>
+  </data>
+  <data name="QualityOutOfRange" xml:space="preserve">
+    <value>Jakość musi być liczbą od 1 do 100.</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Błąd:</value>
+  </data>
+  <data name="HelpDescription" xml:space="preserve">
+    <value>OPIS</value>
+  </data>
+  <data name="HelpUsage" xml:space="preserve">
+    <value>UŻYCIE</value>
+  </data>
+  <data name="HelpExamples" xml:space="preserve">
+    <value>PRZYKŁADY</value>
+  </data>
+  <data name="HelpArguments" xml:space="preserve">
+    <value>ARGUMENTY</value>
+  </data>
+  <data name="HelpOptions" xml:space="preserve">
+    <value>OPCJE</value>
+  </data>
+  <data name="HelpDefault" xml:space="preserve">
+    <value>DOMYŚLNIE</value>
+  </data>
+  <data name="HelpPrintsHelp" xml:space="preserve">
+    <value>Wyświetla pomoc</value>
+  </data>
+  <data name="HelpPrintsVersion" xml:space="preserve">
+    <value>Wyświetla wersję programu</value>
+  </data>
+  <data name="SourceNotFolderOrZip" xml:space="preserve">
+    <value>Źródło musi być folderem lub plikiem .zip: {0}</value>
+  </data>
+  <data name="SourceZipNotFound" xml:space="preserve">
+    <value>Źródłowy plik ZIP nie istnieje: {0}</value>
+  </data>
+  <data name="SourceFolderNotFound" xml:space="preserve">
+    <value>Folder źródłowy nie istnieje: {0}</value>
+  </data>
+  <data name="DestinationNotFolderOrZip" xml:space="preserve">
+    <value>Cel musi być folderem lub plikiem .zip: {0}</value>
+  </data>
+  <data name="CannotRead" xml:space="preserve">
+    <value>Nie można odczytać {0}</value>
+  </data>
+  <data name="CannotWriteTo" xml:space="preserve">
+    <value>Nie można zapisać w {0}</value>
+  </data>
+  <data name="CannotWrite" xml:space="preserve">
+    <value>Nie można zapisać {0}</value>
+  </data>
+  <data name="NoHeicFilesFoundIn" xml:space="preserve">
+    <value>Nie znaleziono plików .heic/.heif w</value>
+  </data>
+  <data name="SourceLabel" xml:space="preserve">
+    <value>Źródło:</value>
+  </data>
+  <data name="DestinationLabel" xml:space="preserve">
+    <value>Cel:</value>
+  </data>
+  <data name="QualityLabel" xml:space="preserve">
+    <value>Jakość:</value>
+  </data>
+  <data name="ConvertingFiles" xml:space="preserve">
+    <value>Konwertowanie plików: {0}</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Przerwano.</value>
+  </data>
+  <data name="NothingWrittenTo" xml:space="preserve">
+    <value>Nic nie zostało zapisane w {0}.</value>
+  </data>
+  <data name="ConvertedOf" xml:space="preserve">
+    <value>Przekonwertowane pliki: {0} z {1}.</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Podsumowanie</value>
+  </data>
+  <data name="SummaryConverted" xml:space="preserve">
+    <value>Przekonwertowane</value>
+  </data>
+  <data name="SummaryFailed" xml:space="preserve">
+    <value>Nieudane</value>
+  </data>
+  <data name="SummaryElapsed" xml:space="preserve">
+    <value>Czas</value>
+  </data>
+  <data name="SummaryOutput" xml:space="preserve">
+    <value>Zapisano w</value>
+  </data>
+  <data name="Failures" xml:space="preserve">
+    <value>Błędy</value>
+  </data>
+  <data name="FailuresFile" xml:space="preserve">
+    <value>Plik</value>
+  </data>
+  <data name="FailuresError" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="RefusingToWriteOutside" xml:space="preserve">
+    <value>Odmowa zapisu poza miejscem docelowym: {0}</value>
+  </data>
+  <data name="NotAValidFileName" xml:space="preserve">
+    <value>Nieprawidłowa nazwa pliku w tym systemie: {0}</value>
+  </data>
+  <data name="AlreadySavedAs" xml:space="preserve">
+    <value>Inne zdjęcie zostało już zapisane jako {0}</value>
+  </data>
+  <data name="PhotosOne" xml:space="preserve">
+    <value>{0} plik HEIC</value>
+  </data>
+  <data name="PhotosFew" xml:space="preserve">
+    <value>{0} pliki HEIC</value>
+  </data>
+  <data name="PhotosMany" xml:space="preserve">
+    <value>{0} plików HEIC</value>
+  </data>
+  <data name="MenuIntro" xml:space="preserve">
+    <value>Konwertuje zdjęcia HEIC/HEIF do formatu JPEG. Uruchom {0}, aby zobaczyć opcje wiersza poleceń.</value>
+  </data>
+  <data name="MenuSource" xml:space="preserve">
+    <value>Źródło</value>
+  </data>
+  <data name="MenuDestination" xml:space="preserve">
+    <value>Cel</value>
+  </data>
+  <data name="JpegQuality" xml:space="preserve">
+    <value>Jakość JPEG</value>
+  </data>
+  <data name="NotChosen" xml:space="preserve">
+    <value>nie wybrano</value>
+  </data>
+  <data name="MenuConvert" xml:space="preserve">
+    <value>Konwertuj</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="BackToMenu" xml:space="preserve">
+    <value>Wróć do menu</value>
+  </data>
+  <data name="QualityHint" xml:space="preserve">
+    <value>90 to dobra wartość dla zdjęć. Niższa da mniejsze pliki.</value>
+  </data>
+  <data name="QualityPrompt" xml:space="preserve">
+    <value>Jakość JPEG, 1-100</value>
+  </data>
+  <data name="EnterQuality" xml:space="preserve">
+    <value>Podaj liczbę od 1 do 100.</value>
+  </data>
+  <data name="ZipFileWithPhotos" xml:space="preserve">
+    <value>plik ZIP, {0}</value>
+  </data>
+  <data name="CannotBeRead" xml:space="preserve">
+    <value>nie można odczytać</value>
+  </data>
+  <data name="ExistingZipFile" xml:space="preserve">
+    <value>istniejący plik ZIP</value>
+  </data>
+  <data name="NewZipFileDetail" xml:space="preserve">
+    <value>nowy plik ZIP</value>
+  </data>
+  <data name="NewFolderDetail" xml:space="preserve">
+    <value>nowy folder</value>
+  </data>
+  <data name="ChooseSource" xml:space="preserve">
+    <value>Wybierz źródło</value>
+  </data>
+  <data name="ChooseDestination" xml:space="preserve">
+    <value>Wybierz miejsce docelowe</value>
+  </data>
+  <data name="SourceHint" xml:space="preserve">
+    <value>Folder ze zdjęciami .heic/.heif albo plik .zip, który je zawiera.</value>
+  </data>
+  <data name="DestinationHint" xml:space="preserve">
+    <value>Folder na pliki .jpg albo plik .zip, w którym zostaną zapisane.</value>
+  </data>
+  <data name="Drives" xml:space="preserve">
+    <value>Dyski</value>
+  </data>
+  <data name="UseThisFolder" xml:space="preserve">
+    <value>Użyj tego folderu</value>
+  </data>
+  <data name="NewFolder" xml:space="preserve">
+    <value>Nowy folder</value>
+  </data>
+  <data name="NewZipFile" xml:space="preserve">
+    <value>Nowy plik ZIP</value>
+  </data>
+  <data name="TypeAPath" xml:space="preserve">
+    <value>Wpisz ścieżkę</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Wstecz</value>
+  </data>
+  <data name="BrowserMoreChoices" xml:space="preserve">
+    <value>(Strzałki w górę i w dół pokażą więcej, Esc – powrót)</value>
+  </data>
+  <data name="CannotOpen" xml:space="preserve">
+    <value>Nie można otworzyć {0}</value>
+  </data>
+  <data name="NoHeicFilesInThisFolder" xml:space="preserve">
+    <value>W tym folderze nie ma plików .heic/.heif.</value>
+  </data>
+  <data name="NoHeicFilesInZip" xml:space="preserve">
+    <value>W pliku {0} nie ma plików .heic/.heif.</value>
+  </data>
+  <data name="NotFolderOrZip" xml:space="preserve">
+    <value>To nie jest folder ani plik .zip:</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Nie znaleziono:</value>
+  </data>
+  <data name="NotAValidPath" xml:space="preserve">
+    <value>Nieprawidłowa ścieżka:</value>
+  </data>
+  <data name="NewZipFileName" xml:space="preserve">
+    <value>Nazwa nowego pliku ZIP</value>
+  </data>
+  <data name="NewFolderName" xml:space="preserve">
+    <value>Nazwa nowego folderu</value>
+  </data>
+  <data name="InvalidName" xml:space="preserve">
+    <value>To nie jest prawidłowa nazwa.</value>
+  </data>
+  <data name="FolderAlreadyExists" xml:space="preserve">
+    <value>Folder o tej nazwie już istnieje.</value>
+  </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>Plik o tej nazwie już istnieje.</value>
+  </data>
+  <data name="FolderNameEndsInZip" xml:space="preserve">
+    <value>Nazwa folderu nie może kończyć się na .zip. Wybierz zamiast tego {0}.</value>
+  </data>
+  <data name="PathPrompt" xml:space="preserve">
+    <value>Folder lub plik .zip</value>
+  </data>
+  <data name="LeaveEmptyToGoBack" xml:space="preserve">
+    <value>(zostaw puste, aby wrócić)</value>
+  </data>
+</root>
