@@ -73,20 +73,26 @@ jobs:
     needs: binaries
     if: ${{ !contains(github.ref_name, '-') }}
     runs-on: ubuntu-latest
+    # master only accepts changes through pull requests that pass CI, so the updated
+    # manifests go through a pull request that merges itself once the checks pass.
+    # Needs "Allow GitHub Actions to create and approve pull requests" in the repository's
+    # Actions settings.
     permissions:
-      contents: write # push the updated manifests to master
-      actions: write # start the packaging workflow on the new commit
+      contents: write # push the manifests branch
+      pull-requests: write # open the pull request and turn on auto-merge
+      actions: write # start CI and the packaging check on the branch
     steps:
       - uses: actions/checkout@v7
         with:
           ref: master
 
-      - name: Update manifests
+      - name: Open a pull request with the updated manifests
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           VERSION="${GITHUB_REF_NAME#v}"
+          BRANCH="manifests/v$VERSION"
           gh release download "$GITHUB_REF_NAME" -p SHA256SUMS.txt -D "$RUNNER_TEMP"
           .github/scripts/update-manifests.sh "$VERSION" "$RUNNER_TEMP/SHA256SUMS.txt"
           git add bucket Formula
@@ -96,10 +102,21 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
           git commit -m "Update Scoop and Homebrew manifests to $VERSION"
-          git push
-          # Pushes made with GITHUB_TOKEN don't trigger workflows, so start the install check explicitly.
-          gh workflow run packaging.yml --ref master
+          # --force so a re-run of this job replaces the branch from the earlier attempt.
+          git push --force origin "$BRANCH"
+          if [[ "$(gh pr list --head "$BRANCH" --state open --json number --jq length)" == 0 ]]; then
+            gh pr create --base master --head "$BRANCH" \
+              --title "Update Scoop and Homebrew manifests to $VERSION" \
+              --body "Points \`bucket/\` and \`Formula/\` at the $GITHUB_REF_NAME release. Opened by the [release workflow]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID); it merges itself once CI passes."
+          fi
+          # Turn on auto-merge before any check has run, while the pull request is still blocked.
+          gh pr merge "$BRANCH" --auto --squash
+          # Pull requests and pushes made with GITHUB_TOKEN don't trigger workflows, so start
+          # the required CI checks and the install check on the branch explicitly.
+          gh workflow run ci.yml --ref "$BRANCH"
+          gh workflow run packaging.yml --ref "$BRANCH"
 
   winget:
     name: WinGet
