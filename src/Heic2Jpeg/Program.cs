@@ -19,13 +19,16 @@ if (args.Length == 0 && InteractiveMenu.IsSupported(AnsiConsole.Console))
     return await new InteractiveMenu(AnsiConsole.Console, GetVersion()).RunAsync(cancellation.Token);
 }
 
+// Every text is in Strings.resx / Strings.pl.resx, in the language of CultureInfo.CurrentUICulture.
 var app = new CommandApp<ConvertCommand>()
-    .WithDescription("Converts HEIC/HEIF photos to JPEG. Run it without arguments to choose the folders from a menu.");
+    .WithDescription(Strings.AppDescription);
 
 app.Configure(config =>
 {
     config.SetApplicationName("heic2jpeg");
     config.SetApplicationVersion(GetVersion());
+    config.SetHelpProvider(new LocalizedHelpProvider());
+    config.SetExceptionHandler(WriteError);
     config.AddExample("~/Pictures/heic", "~/Pictures/jpeg");
     config.AddExample("~/Pictures/heic", "~/Pictures/jpeg", "--quality", "85");
     config.AddExample("~/Downloads/iCloud.zip", "~/Pictures/jpeg");
@@ -33,6 +36,22 @@ app.Configure(config =>
 });
 
 return await app.RunAsync(args, cancellation.Token);
+
+// What Spectre.Console.Cli prints by default, but with "Error:" in the user's language.
+static int WriteError(Exception ex, ITypeResolver? resolver)
+{
+    if (ex is CommandAppException { Pretty: { } pretty })
+    {
+        // A parse error that points at the bad argument. Spectre writes it, in English.
+        AnsiConsole.Write(pretty);
+    }
+    else
+    {
+        AnsiConsole.MarkupLine($"[red]{Markup.Escape(Strings.ErrorPrefix)}[/] {Markup.Escape(ex.Message)}");
+    }
+
+    return -1;
+}
 
 static string GetVersion()
 {

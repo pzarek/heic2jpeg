@@ -23,17 +23,17 @@ public static class Locations
 
         if (File.Exists(path))
         {
-            return HasZipExtension(path) ? null : $"Source must be a folder or a .zip file: {path}";
+            return HasZipExtension(path) ? null : string.Format(Strings.SourceNotFolderOrZip, path);
         }
 
         return HasZipExtension(path)
-            ? $"Source ZIP file does not exist: {path}"
-            : $"Source folder does not exist: {path}";
+            ? string.Format(Strings.SourceZipNotFound, path)
+            : string.Format(Strings.SourceFolderNotFound, path);
     }
 
     /// <summary>Returns an error message, or null when the destination can be written to.</summary>
     public static string? ValidateDestination(string path) =>
         File.Exists(path) && !HasZipExtension(path)
-            ? $"Destination must be a folder or a .zip file: {path}"
+            ? string.Format(Strings.DestinationNotFolderOrZip, path)
             : null;
 }

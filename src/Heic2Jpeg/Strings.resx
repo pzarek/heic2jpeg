@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    English texts, also used for every language without its own Strings.<language>.resx file.
+    Code reads them through the generated Heic2Jpeg.Strings class; see Heic2Jpeg.csproj.
+    Texts are plain text, never Spectre.Console markup: the code escapes them and adds the colours.
+    {0}, {1} are filled in with string.Format.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Converts HEIC/HEIF photos to JPEG. Run it without arguments to choose the folders from a menu.</value>
+    <comment>First line of --help.</comment>
+  </data>
+  <data name="SourceArgumentDescription" xml:space="preserve">
+    <value>Folder or .zip file containing .heic/.heif files.</value>
+    <comment>--help: the SOURCE argument.</comment>
+  </data>
+  <data name="DestinationArgumentDescription" xml:space="preserve">
+    <value>Folder or .zip file to write .jpg files to. Created if it does not exist.</value>
+    <comment>--help: the DESTINATION argument.</comment>
+  </data>
+  <data name="QualityOptionDescription" xml:space="preserve">
+    <value>JPEG quality, 1-100.</value>
+    <comment>--help: the --quality option.</comment>
+  </data>
+  <data name="QualityOutOfRange" xml:space="preserve">
+    <value>Quality must be between 1 and 100.</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Error:</value>
+    <comment>Shown in red before an error message.</comment>
+  </data>
+  <data name="HelpDescription" xml:space="preserve">
+    <value>DESCRIPTION</value>
+    <comment>--help section heading.</comment>
+  </data>
+  <data name="HelpUsage" xml:space="preserve">
+    <value>USAGE</value>
+    <comment>--help section heading.</comment>
+  </data>
+  <data name="HelpExamples" xml:space="preserve">
+    <value>EXAMPLES</value>
+    <comment>--help section heading.</comment>
+  </data>
+  <data name="HelpArguments" xml:space="preserve">
+    <value>ARGUMENTS</value>
+    <comment>--help section heading.</comment>
+  </data>
+  <data name="HelpOptions" xml:space="preserve">
+    <value>OPTIONS</value>
+    <comment>--help section heading, also shown as [OPTIONS] in the usage line.</comment>
+  </data>
+  <data name="HelpDefault" xml:space="preserve">
+    <value>DEFAULT</value>
+    <comment>--help column heading above the options' default values.</comment>
+  </data>
+  <data name="HelpPrintsHelp" xml:space="preserve">
+    <value>Prints help information</value>
+    <comment>--help: the -h|--help option.</comment>
+  </data>
+  <data name="HelpPrintsVersion" xml:space="preserve">
+    <value>Prints version information</value>
+    <comment>--help: the -v|--version option.</comment>
+  </data>
+  <data name="SourceNotFolderOrZip" xml:space="preserve">
+    <value>Source must be a folder or a .zip file: {0}</value>
+    <comment>{0} is a path.</comment>
+  </data>
+  <data name="SourceZipNotFound" xml:space="preserve">
+    <value>Source ZIP file does not exist: {0}</value>
+    <comment>{0} is a path.</comment>
+  </data>
+  <data name="SourceFolderNotFound" xml:space="preserve">
+    <value>Source folder does not exist: {0}</value>
+    <comment>{0} is a path.</comment>
+  </data>
+  <data name="DestinationNotFolderOrZip" xml:space="preserve">
+    <value>Destination must be a folder or a .zip file: {0}</value>
+    <comment>{0} is a path.</comment>
+  </data>
+  <data name="CannotRead" xml:space="preserve">
+    <value>Cannot read {0}</value>
+    <comment>{0} is a path or file name. Followed by a colon and the reason.</comment>
+  </data>
+  <data name="CannotWriteTo" xml:space="preserve">
+    <value>Cannot write to {0}</value>
+    <comment>{0} is a path. Followed by a colon and the reason.</comment>
+  </data>
+  <data name="CannotWrite" xml:space="preserve">
+    <value>Cannot write {0}</value>
+    <comment>{0} is a path. Followed by a colon and the reason.</comment>
+  </data>
+  <data name="NoHeicFilesFoundIn" xml:space="preserve">
+    <value>No .heic/.heif files found in</value>
+    <comment>Followed by the path of the folder or ZIP file.</comment>
+  </data>
+  <data name="SourceLabel" xml:space="preserve">
+    <value>Source:</value>
+    <comment>Shown before converting, next to the path.</comment>
+  </data>
+  <data name="DestinationLabel" xml:space="preserve">
+    <value>Destination:</value>
+    <comment>Shown before converting, next to the path.</comment>
+  </data>
+  <data name="QualityLabel" xml:space="preserve">
+    <value>Quality:</value>
+    <comment>Shown before converting, next to the number.</comment>
+  </data>
+  <data name="ConvertingFiles" xml:space="preserve">
+    <value>Converting {0} files</value>
+    <comment>Progress bar title. {0} is the number of files.</comment>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+    <comment>After Ctrl+C.</comment>
+  </data>
+  <data name="NothingWrittenTo" xml:space="preserve">
+    <value>Nothing was written to {0}.</value>
+    <comment>After Ctrl+C. {0} is the destination ZIP file.</comment>
+  </data>
+  <data name="ConvertedOf" xml:space="preserve">
+    <value>Converted {0} of {1} files.</value>
+    <comment>After Ctrl+C. {0} is the number converted, {1} the total.</comment>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Summary</value>
+    <comment>Title of the box shown after converting.</comment>
+  </data>
+  <data name="SummaryConverted" xml:space="preserve">
+    <value>Converted</value>
+    <comment>Summary row, next to the number of files.</comment>
+  </data>
+  <data name="SummaryFailed" xml:space="preserve">
+    <value>Failed</value>
+    <comment>Summary row, next to the number of files.</comment>
+  </data>
+  <data name="SummaryElapsed" xml:space="preserve">
+    <value>Elapsed</value>
+    <comment>Summary row, next to the time in seconds.</comment>
+  </data>
+  <data name="SummaryOutput" xml:space="preserve">
+    <value>Output</value>
+    <comment>Summary row, next to the destination path.</comment>
+  </data>
+  <data name="Failures" xml:space="preserve">
+    <value>Failures</value>
+    <comment>Title of the table of files that could not be converted.</comment>
+  </data>
+  <data name="FailuresFile" xml:space="preserve">
+    <value>File</value>
+    <comment>Column of the failures table.</comment>
+  </data>
+  <data name="FailuresError" xml:space="preserve">
+    <value>Error</value>
+    <comment>Column of the failures table.</comment>
+  </data>
+  <data name="RefusingToWriteOutside" xml:space="preserve">
+    <value>Refusing to write outside the destination: {0}</value>
+    <comment>{0} is a path inside a ZIP file.</comment>
+  </data>
+  <data name="NotAValidFileName" xml:space="preserve">
+    <value>Not a valid file name on this system: {0}</value>
+    <comment>{0} is a path inside a ZIP file.</comment>
+  </data>
+  <data name="AlreadySavedAs" xml:space="preserve">
+    <value>Another photo was already saved as {0}</value>
+    <comment>{0} is a path inside the destination ZIP file.</comment>
+  </data>
+  <data name="PhotosOne" xml:space="preserve">
+    <value>{0} HEIC file</value>
+    <comment>Exactly 1 file.</comment>
+  </data>
+  <data name="PhotosFew" xml:space="preserve">
+    <value>{0} HEIC files</value>
+    <comment>Polish: 2-4, 22-24, 32-34, ... (but not 12-14) files. English: same as PhotosMany.</comment>
+  </data>
+  <data name="PhotosMany" xml:space="preserve">
+    <value>{0} HEIC files</value>
+    <comment>Every other number of files, including 0.</comment>
+  </data>
+  <data name="MenuIntro" xml:space="preserve">
+    <value>Converts HEIC/HEIF photos to JPEG. Run {0} for the command-line options.</value>
+    <comment>{0} is the command "heic2jpeg --help".</comment>
+  </data>
+  <data name="MenuSource" xml:space="preserve">
+    <value>Source</value>
+    <comment>Menu item, followed by the chosen folder or ZIP file.</comment>
+  </data>
+  <data name="MenuDestination" xml:space="preserve">
+    <value>Destination</value>
+    <comment>Menu item, followed by the chosen folder or ZIP file.</comment>
+  </data>
+  <data name="JpegQuality" xml:space="preserve">
+    <value>JPEG quality</value>
+    <comment>Menu item, followed by the number; also the title of the quality screen.</comment>
+  </data>
+  <data name="NotChosen" xml:space="preserve">
+    <value>not chosen</value>
+    <comment>Shown instead of a path when none has been chosen.</comment>
+  </data>
+  <data name="MenuConvert" xml:space="preserve">
+    <value>Convert</value>
+    <comment>Menu item.</comment>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+    <comment>Menu item.</comment>
+  </data>
+  <data name="BackToMenu" xml:space="preserve">
+    <value>Back to the menu</value>
+    <comment>Choice after converting.</comment>
+  </data>
+  <data name="QualityHint" xml:space="preserve">
+    <value>90 is a good default for photos. Lower it for smaller files.</value>
+  </data>
+  <data name="QualityPrompt" xml:space="preserve">
+    <value>JPEG quality, 1-100</value>
+    <comment>Prompt; the default value and a colon are added after it.</comment>
+  </data>
+  <data name="EnterQuality" xml:space="preserve">
+    <value>Enter a number from 1 to 100.</value>
+    <comment>Shown when the quality typed in is not valid.</comment>
+  </data>
+  <data name="ZipFileWithPhotos" xml:space="preserve">
+    <value>ZIP file, {0}</value>
+    <comment>Details of the chosen source. {0} is the number of HEIC files, e.g. "3 HEIC files".</comment>
+  </data>
+  <data name="CannotBeRead" xml:space="preserve">
+    <value>cannot be read</value>
+    <comment>Details of the chosen source.</comment>
+  </data>
+  <data name="ExistingZipFile" xml:space="preserve">
+    <value>existing ZIP file</value>
+    <comment>Details of the chosen destination.</comment>
+  </data>
+  <data name="NewZipFileDetail" xml:space="preserve">
+    <value>new ZIP file</value>
+    <comment>Details of the chosen destination.</comment>
+  </data>
+  <data name="NewFolderDetail" xml:space="preserve">
+    <value>new folder</value>
+    <comment>Details of the chosen destination.</comment>
+  </data>
+  <data name="ChooseSource" xml:space="preserve">
+    <value>Choose the source</value>
+    <comment>Title of the folder browser.</comment>
+  </data>
+  <data name="ChooseDestination" xml:space="preserve">
+    <value>Choose the destination</value>
+    <comment>Title of the folder browser.</comment>
+  </data>
+  <data name="SourceHint" xml:space="preserve">
+    <value>A folder with .heic/.heif photos, or a .zip file that contains them.</value>
+  </data>
+  <data name="DestinationHint" xml:space="preserve">
+    <value>A folder for the .jpg files, or a .zip file to put them in.</value>
+  </data>
+  <data name="Drives" xml:space="preserve">
+    <value>Drives</value>
+    <comment>Shown instead of a folder path when listing the drives (Windows).</comment>
+  </data>
+  <data name="UseThisFolder" xml:space="preserve">
+    <value>Use this folder</value>
+    <comment>List item, shown in square brackets.</comment>
+  </data>
+  <data name="NewFolder" xml:space="preserve">
+    <value>New folder</value>
+    <comment>List item, shown in square brackets.</comment>
+  </data>
+  <data name="NewZipFile" xml:space="preserve">
+    <value>New ZIP file</value>
+    <comment>List item, shown in square brackets.</comment>
+  </data>
+  <data name="TypeAPath" xml:space="preserve">
+    <value>Type a path</value>
+    <comment>List item, shown in square brackets.</comment>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+    <comment>List item, shown in square brackets.</comment>
+  </data>
+  <data name="BrowserMoreChoices" xml:space="preserve">
+    <value>(Move up and down to see more, Esc to go back)</value>
+    <comment>Shown below a list that does not fit on the screen.</comment>
+  </data>
+  <data name="CannotOpen" xml:space="preserve">
+    <value>Cannot open {0}</value>
+    <comment>{0} is a folder path. Followed by a colon and the reason.</comment>
+  </data>
+  <data name="NoHeicFilesInThisFolder" xml:space="preserve">
+    <value>There are no .heic/.heif files in this folder.</value>
+  </data>
+  <data name="NoHeicFilesInZip" xml:space="preserve">
+    <value>There are no .heic/.heif files in {0}.</value>
+    <comment>{0} is a ZIP file name.</comment>
+  </data>
+  <data name="NotFolderOrZip" xml:space="preserve">
+    <value>Not a folder or a .zip file:</value>
+    <comment>Followed by a path.</comment>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found:</value>
+    <comment>Followed by a path.</comment>
+  </data>
+  <data name="NotAValidPath" xml:space="preserve">
+    <value>Not a valid path:</value>
+    <comment>Followed by the text that was typed in.</comment>
+  </data>
+  <data name="NewZipFileName" xml:space="preserve">
+    <value>Name of the new ZIP file</value>
+    <comment>Prompt; the suggested name and a colon are added after it.</comment>
+  </data>
+  <data name="NewFolderName" xml:space="preserve">
+    <value>Name of the new folder</value>
+    <comment>Prompt; the suggested name and a colon are added after it.</comment>
+  </data>
+  <data name="InvalidName" xml:space="preserve">
+    <value>That is not a valid name.</value>
+  </data>
+  <data name="FolderAlreadyExists" xml:space="preserve">
+    <value>There is already a folder with that name.</value>
+  </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>There is already a file with that name.</value>
+  </data>
+  <data name="FolderNameEndsInZip" xml:space="preserve">
+    <value>A folder name cannot end in .zip. Choose {0} instead.</value>
+    <comment>{0} is the list item "[New ZIP file]".</comment>
+  </data>
+  <data name="PathPrompt" xml:space="preserve">
+    <value>Folder or .zip file</value>
+    <comment>Prompt for typing a path.</comment>
+  </data>
+  <data name="LeaveEmptyToGoBack" xml:space="preserve">
+    <value>(leave empty to go back)</value>
+    <comment>Shown after PathPrompt.</comment>
+  </data>
+</root>

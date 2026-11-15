@@ -30,7 +30,7 @@ public static class Converter
         }
         catch (Exception ex) when (IsFileError(ex))
         {
-            console.MarkupLineInterpolated($"[red]Error:[/] Cannot read {source}: {ex.Message}");
+            console.MarkupLineInterpolated($"[red]{Strings.ErrorPrefix}[/] {string.Format(Strings.CannotRead, source)}: {ex.Message}");
             return 1;
         }
 
@@ -39,7 +39,7 @@ public static class Converter
             var photos = photoSource.Photos;
             if (photos.Count == 0)
             {
-                console.MarkupLineInterpolated($"[yellow]No .heic/.heif files found in[/] {source}");
+                console.MarkupLineInterpolated($"[yellow]{Strings.NoHeicFilesFoundIn}[/] {source}");
                 return 0;
             }
 
@@ -50,7 +50,7 @@ public static class Converter
             }
             catch (Exception ex) when (IsFileError(ex))
             {
-                console.MarkupLineInterpolated($"[red]Error:[/] Cannot write to {destination}: {ex.Message}");
+                console.MarkupLineInterpolated($"[red]{Strings.ErrorPrefix}[/] {string.Format(Strings.CannotWriteTo, destination)}: {ex.Message}");
                 return 1;
             }
 
@@ -74,9 +74,11 @@ public static class Converter
         var photos = source.Photos;
         var toZip = destination is ZipDestination;
 
-        console.MarkupLineInterpolated($"[grey]Source:[/]      {sourcePath}");
-        console.MarkupLineInterpolated($"[grey]Destination:[/] {destinationPath}");
-        console.MarkupLineInterpolated($"[grey]Quality:[/]     {quality}");
+        // Line the values up one space after the longest label.
+        var labelWidth = new[] { Strings.SourceLabel, Strings.DestinationLabel, Strings.QualityLabel }.Max(label => label.Length) + 1;
+        console.MarkupLineInterpolated($"[grey]{Strings.SourceLabel.PadRight(labelWidth)}[/]{sourcePath}");
+        console.MarkupLineInterpolated($"[grey]{Strings.DestinationLabel.PadRight(labelWidth)}[/]{destinationPath}");
+        console.MarkupLineInterpolated($"[grey]{Strings.QualityLabel.PadRight(labelWidth)}[/]{quality}");
         console.WriteLine();
 
         var failures = new ConcurrentBag<(string File, string Error)>();
@@ -96,7 +98,8 @@ public static class Converter
                     new SpinnerColumn())
                 .StartAsync(async ctx =>
                 {
-                    var overall = ctx.AddTask($"[bold]Converting {photos.Count} files[/]", maxValue: photos.Count);
+                    var title = Markup.Escape(string.Format(Strings.ConvertingFiles, photos.Count));
+                    var overall = ctx.AddTask($"[bold]{title}[/]", maxValue: photos.Count);
 
                     var options = new ParallelOptions
                     {
@@ -127,9 +130,10 @@ public static class Converter
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            console.MarkupLine(toZip
-                ? $"[yellow]Cancelled.[/] Nothing was written to {Markup.Escape(destinationPath)}."
-                : $"[yellow]Cancelled[/] after converting {converted} of {photos.Count} files.");
+            var outcome = toZip
+                ? string.Format(Strings.NothingWrittenTo, destinationPath)
+                : string.Format(Strings.ConvertedOf, converted, photos.Count);
+            console.MarkupLineInterpolated($"[yellow]{Strings.Cancelled}[/] {outcome}");
             return CancelledExitCode;
         }
 
@@ -141,7 +145,7 @@ public static class Converter
         }
         catch (Exception ex) when (IsFileError(ex))
         {
-            console.MarkupLineInterpolated($"[red]Error:[/] Cannot write {destinationPath}: {ex.Message}");
+            console.MarkupLineInterpolated($"[red]{Strings.ErrorPrefix}[/] {string.Format(Strings.CannotWrite, destinationPath)}: {ex.Message}");
             return 1;
         }
 
@@ -173,21 +177,21 @@ public static class Converter
         var converted = total - failures.Count;
 
         var grid = new Grid().AddColumn().AddColumn();
-        grid.AddRow("[grey]Converted[/]", $"[green]{converted}[/]");
-        grid.AddRow("[grey]Failed[/]", failures.IsEmpty ? "0" : $"[red]{failures.Count}[/]");
-        grid.AddRow("[grey]Elapsed[/]", $"{elapsed.TotalSeconds:F1} s");
-        grid.AddRow("[grey]Output[/]", Markup.Escape(destination));
+        grid.AddRow(Label(Strings.SummaryConverted), $"[green]{converted}[/]");
+        grid.AddRow(Label(Strings.SummaryFailed), failures.IsEmpty ? "0" : $"[red]{failures.Count}[/]");
+        grid.AddRow(Label(Strings.SummaryElapsed), $"{elapsed.TotalSeconds:F1} s");
+        grid.AddRow(Label(Strings.SummaryOutput), Markup.Escape(destination));
 
-        console.Write(new Panel(grid).Header("Summary").Border(BoxBorder.Rounded));
+        console.Write(new Panel(grid).Header(Markup.Escape(Strings.Summary)).Border(BoxBorder.Rounded));
 
         if (failures.IsEmpty)
         {
             return;
         }
 
-        var table = new Table().Border(TableBorder.Rounded).Title("[red]Failures[/]");
-        table.AddColumn("File");
-        table.AddColumn("Error");
+        var table = new Table().Border(TableBorder.Rounded).Title($"[red]{Markup.Escape(Strings.Failures)}[/]");
+        table.AddColumn(Markup.Escape(Strings.FailuresFile));
+        table.AddColumn(Markup.Escape(Strings.FailuresError));
 
         foreach (var (file, error) in failures.OrderBy(f => f.File, StringComparer.OrdinalIgnoreCase))
         {
@@ -195,5 +199,7 @@ public static class Converter
         }
 
         console.Write(table);
+
+        static string Label(string text) => $"[grey]{Markup.Escape(text)}[/]";
     }
 }

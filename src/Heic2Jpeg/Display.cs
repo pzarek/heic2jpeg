@@ -40,7 +40,8 @@ internal static class Display
 
     public static bool SamePath(string? a, string? b) => a is not null && b is not null && string.Equals(a, b, PathComparison);
 
-    public static string Photos(int count) => count == 1 ? "1 HEIC file" : $"{count} HEIC files";
+    public static string Photos(int count) =>
+        Plural.Format(count, Strings.PhotosOne, Strings.PhotosFew, Strings.PhotosMany);
 
     public static string Size(long bytes)
     {

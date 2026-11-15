@@ -19,8 +19,6 @@ public sealed class PathBrowser(IAnsiConsole console)
 
     private static readonly StringComparer NameComparer = StringComparer.CurrentCultureIgnoreCase;
 
-    private static readonly Entry BackEntry = new(Kind.Back, "[[Back]]");
-
     private enum Kind
     {
         UseFolder,
@@ -49,6 +47,7 @@ public sealed class PathBrowser(IAnsiConsole console)
         CancellationToken cancellationToken)
     {
         string? folder = Path.GetFullPath(startFolder); // null shows the list of drives.
+        var back = new Entry(Kind.Back, Bracketed(Strings.Back));
         string? message = null;
         string? highlight = null;
 
@@ -57,7 +56,7 @@ public sealed class PathBrowser(IAnsiConsole console)
             Listing? listing = null;
             if (folder is not null && !TryList(folder, out listing, out var error))
             {
-                message = $"[red]Cannot open {Markup.Escape(Display.Path(folder))}:[/] {Markup.Escape(error)}";
+                message = $"[red]{Markup.Escape(string.Format(Strings.CannotOpen, Display.Path(folder)))}:[/] {Markup.Escape(error)}";
                 highlight = folder;
                 folder = Directory.GetParent(folder)?.FullName;
                 continue;
@@ -68,8 +67,8 @@ public sealed class PathBrowser(IAnsiConsole console)
             message = null;
 
             var entries = folder is null ? DriveEntries() : FolderEntries(mode, folder, listing!);
-            entries.Add(new Entry(Kind.TypePath, "[[Type a path]]"));
-            entries.Add(BackEntry);
+            entries.Add(new Entry(Kind.TypePath, Bracketed(Strings.TypeAPath)));
+            entries.Add(back);
 
             var preselected = entries.FirstOrDefault(entry =>
                 entry.Kind is Kind.Folder or Kind.Zip or Kind.Drive && Display.SamePath(entry.Path, highlight));
@@ -79,10 +78,10 @@ public sealed class PathBrowser(IAnsiConsole console)
                 .UseConverter(entry => entry.Label)
                 .AddChoices(entries)
                 .DefaultValue(preselected ?? entries[0])
-                .AddCancelResult(BackEntry)
+                .AddCancelResult(back)
                 .WrapAround()
                 .PageSize(Math.Max(3, console.Profile.Height - headerLines - 3))
-                .MoreChoicesText("[grey](Move up and down to see more, Esc to go back)[/]")
+                .MoreChoicesText($"[grey]{Markup.Escape(Strings.BrowserMoreChoices)}[/]")
                 .ShowAsync(console, cancellationToken);
 
             switch (choice.Kind)
@@ -91,7 +90,7 @@ public sealed class PathBrowser(IAnsiConsole console)
                     return null;
 
                 case Kind.UseFolder when mode == BrowseMode.Source && listing!.PhotoCount == 0:
-                    message = "[yellow]There are no .heic/.heif files in this folder.[/]";
+                    message = $"[yellow]{Markup.Escape(Strings.NoHeicFilesInThisFolder)}[/]";
                     break;
 
                 case Kind.UseFolder:
@@ -136,7 +135,7 @@ public sealed class PathBrowser(IAnsiConsole console)
                     {
                         message = Locations.HasZipExtension(path)
                             ? CheckZip(mode, path)
-                            : $"[red]Not a folder or a .zip file:[/] {Markup.Escape(Display.Path(path))}";
+                            : $"[red]{Markup.Escape(Strings.NotFolderOrZip)}[/] {Markup.Escape(Display.Path(path))}";
 
                         if (message is null)
                         {
@@ -150,7 +149,7 @@ public sealed class PathBrowser(IAnsiConsole console)
                     }
                     else
                     {
-                        message = $"[red]Not found:[/] {Markup.Escape(Display.Path(path))}";
+                        message = $"[red]{Markup.Escape(Strings.NotFound)}[/] {Markup.Escape(Display.Path(path))}";
                     }
 
                     break;
@@ -160,16 +159,13 @@ public sealed class PathBrowser(IAnsiConsole console)
 
     private int WriteHeader(BrowseMode mode, string? folder, string? message)
     {
-        console.Write(new Rule(mode == BrowseMode.Source
-            ? "[bold]Choose the source[/]"
-            : "[bold]Choose the destination[/]").LeftJustified());
+        var title = mode == BrowseMode.Source ? Strings.ChooseSource : Strings.ChooseDestination;
+        console.Write(new Rule($"[bold]{Markup.Escape(title)}[/]").LeftJustified());
 
-        var description = mode == BrowseMode.Source
-            ? "A folder with .heic/.heif photos, or a .zip file that contains them."
-            : "A folder for the .jpg files, or a .zip file to put them in.";
+        var description = mode == BrowseMode.Source ? Strings.SourceHint : Strings.DestinationHint;
         console.MarkupLineInterpolated($"[grey]{description}[/]");
 
-        var location = folder is null ? "Drives" : Display.FitStart(Display.Path(folder), console.Profile.Width - 1);
+        var location = folder is null ? Strings.Drives : Display.FitStart(Display.Path(folder), console.Profile.Width - 1);
         console.MarkupLineInterpolated($"[bold]{location}[/]");
 
         if (message is not null)
@@ -191,13 +187,14 @@ public sealed class PathBrowser(IAnsiConsole console)
 
         if (mode == BrowseMode.Source)
         {
-            entries.Add(new Entry(Kind.UseFolder, $"[[Use this folder]] [grey]({Display.Photos(listing.PhotoCount)})[/]"));
+            var photos = Markup.Escape(Display.Photos(listing.PhotoCount));
+            entries.Add(new Entry(Kind.UseFolder, $"{Bracketed(Strings.UseThisFolder)} [grey]({photos})[/]"));
         }
         else
         {
-            entries.Add(new Entry(Kind.UseFolder, "[[Use this folder]]"));
-            entries.Add(new Entry(Kind.NewFolder, "[[New folder]]"));
-            entries.Add(new Entry(Kind.NewZip, "[[New ZIP file]]"));
+            entries.Add(new Entry(Kind.UseFolder, Bracketed(Strings.UseThisFolder)));
+            entries.Add(new Entry(Kind.NewFolder, Bracketed(Strings.NewFolder)));
+            entries.Add(new Entry(Kind.NewZip, Bracketed(Strings.NewZipFile)));
         }
 
         // On Windows, going up from a drive's root shows the list of drives.
@@ -291,13 +288,15 @@ public sealed class PathBrowser(IAnsiConsole console)
     /// <summary>Returns an error message, or null when the ZIP file can be used.</summary>
     private static string? CheckZip(BrowseMode mode, string path)
     {
-        var name = Markup.Escape(Path.GetFileName(path));
+        var name = Path.GetFileName(path);
         try
         {
             if (mode == BrowseMode.Source)
             {
                 using var source = new ZipSource(path);
-                return source.Photos.Count == 0 ? $"[yellow]There are no .heic/.heif files in {name}.[/]" : null;
+                return source.Photos.Count == 0
+                    ? $"[yellow]{Markup.Escape(string.Format(Strings.NoHeicFilesInZip, name))}[/]"
+                    : null;
             }
 
             using var archive = ZipFile.OpenRead(path);
@@ -306,13 +305,13 @@ public sealed class PathBrowser(IAnsiConsole console)
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
         {
-            return $"[red]Cannot read {name}:[/] {Markup.Escape(ex.Message)}";
+            return $"[red]{Markup.Escape(string.Format(Strings.CannotRead, name))}:[/] {Markup.Escape(ex.Message)}";
         }
     }
 
     private async Task<string> AskNameAsync(string folder, string suggestedName, bool zip, CancellationToken cancellationToken)
     {
-        var name = await new TextPrompt<string>(zip ? "Name of the new ZIP file" : "Name of the new folder")
+        var name = await new TextPrompt<string>(Markup.Escape(zip ? Strings.NewZipFileName : Strings.NewFolderName))
             .DefaultValue(zip ? suggestedName + ".zip" : suggestedName)
             .Validate(input => ValidateName(input, folder, zip))
             .ShowAsync(console, cancellationToken);
@@ -326,30 +325,32 @@ public sealed class PathBrowser(IAnsiConsole console)
         var name = input.Trim();
         if (name.Length == 0 || name is "." or ".." || name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
         {
-            return ValidationResult.Error("[red]That is not a valid name.[/]");
+            return Error(Strings.InvalidName);
         }
 
         if (zip)
         {
             var file = Locations.HasZipExtension(name) ? name : name + ".zip";
             return Directory.Exists(Path.Combine(folder, file))
-                ? ValidationResult.Error("[red]There is already a folder with that name.[/]")
+                ? Error(Strings.FolderAlreadyExists)
                 : ValidationResult.Success();
         }
 
         if (Locations.HasZipExtension(name))
         {
-            return ValidationResult.Error("[red]A folder name cannot end in .zip. Choose [[New ZIP file]] instead.[/]");
+            return Error(string.Format(Strings.FolderNameEndsInZip, $"[{Strings.NewZipFile}]"));
         }
 
         return File.Exists(Path.Combine(folder, name))
-            ? ValidationResult.Error("[red]There is already a file with that name.[/]")
+            ? Error(Strings.FileAlreadyExists)
             : ValidationResult.Success();
+
+        static ValidationResult Error(string text) => ValidationResult.Error($"[red]{Markup.Escape(text)}[/]");
     }
 
     private async Task<(string? Path, string? Error)> AskPathAsync(string? folder, CancellationToken cancellationToken)
     {
-        var text = await new TextPrompt<string>("Folder or .zip file [grey](leave empty to go back)[/]:")
+        var text = await new TextPrompt<string>($"{Markup.Escape(Strings.PathPrompt)} [grey]{Markup.Escape(Strings.LeaveEmptyToGoBack)}[/]:")
             .AllowEmpty()
             .ShowAsync(console, cancellationToken);
 
@@ -366,7 +367,10 @@ public sealed class PathBrowser(IAnsiConsole console)
         }
         catch (Exception ex) when (ex is ArgumentException or NotSupportedException or IOException)
         {
-            return (null, $"[red]Not a valid path:[/] {Markup.Escape(text)}");
+            return (null, $"[red]{Markup.Escape(Strings.NotAValidPath)}[/] {Markup.Escape(text)}");
         }
     }
+
+    /// <summary>A list item that is not a folder or file, such as "[Back]".</summary>
+    private static string Bracketed(string text) => $"[[{Markup.Escape(text)}]]";
 }
